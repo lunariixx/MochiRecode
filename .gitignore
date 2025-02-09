@@ -1,0 +1,7 @@
+/node_modules
+package-lock.json
+config/information.json
+config/main.js
+config/perms.json
+config/rules.json
+config/urlBlocklist.json
