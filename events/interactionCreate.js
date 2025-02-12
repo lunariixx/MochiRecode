@@ -1,12 +1,11 @@
 const { Events, MessageFlags } = require("discord.js");
+const handleVerify = require("../functions/handleVerify");
 const { logger } = bot;
 
 module.exports = {
 	name: "interactionCreate",
 	async initEvent(client, bot) {
-
 		client.on(Events.InteractionCreate, async (interaction) => {
-			logger.debug(`User ${interaction.user.tag} used interaction: ${interaction.customId || interaction.commandName}`);
 
 			try {
 				if (interaction.isButton()) {
@@ -21,7 +20,7 @@ module.exports = {
 					logger.warn(`[Event] Unknown interaction type: ${interaction.customId}`);
 				}
 			} catch (err) {
-				logger.error(`[Event] Interaction error:`, err);
+				logger.error({ err }, `[Event] Interaction error:`, err.stack);
 				await interaction.reply({ content: "An error occurred while processing your interaction.", flags: MessageFlags.Ephemeral });
 			}
 		});
@@ -40,14 +39,33 @@ async function handleButton(interaction, client, bot) {
 }
 
 async function handleModal(interaction, client, bot) {
-	const handler = client.modals.get(interaction.customId);
-	if (!handler) {
-		bot.logger.warn(`[Event] Unknown modal interaction: ${interaction.customId}`);
-		return interaction.reply({ content: "Unknown modal action.", flags: MessageFlags.Ephemeral });
-	}
+    const modalHandlers = {
+        modal_verify: async () => {
+            await handleVerify.execute(interaction, bot, client);
+        },
+        modal_appeal: async () => {
+            await handleAppeal.execute(interaction, bot, client);
+        },
+    };
 
-	await handler.execute(interaction, bot, client);
+    const handler = modalHandlers[interaction.customId];
+
+    if (!handler) {
+        bot.logger.warn(`[Event] Unknown modal interaction: ${interaction.customId}`);
+        return interaction.reply({ content: "Unknown modal action.", flags: MessageFlags.Ephemeral });
+    }
+
+    try {
+        await handler();
+    } catch (err) {
+        bot.logger.error({ err }, `[Event] Error executing modal '${interaction.customId}':`, err.stack);
+        await interaction.reply({
+            content: "An error occurred while processing your submission.",
+            flags: MessageFlags.Ephemeral,
+        });
+    }
 }
+
 
 async function handleSelectMenu(interaction, client, bot) {
 	const handler = client.menus.get(interaction.customId);
@@ -63,12 +81,12 @@ async function handleCommand(interaction, client, bot) {
 	const handler = client.commands.get(interaction.commandName);
 	if (!handler) return;
 
-	//try {
+	try {
 		await handler.execute(interaction, bot);
-	//} catch (err) {
-	//	bot.logger.error(`[Event] Error executing command '${interaction.commandName}':`, err);
-	//	await interaction.reply({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
-	//}
+	} catch (err) {
+		bot.logger.error({ err }, `[Event] Error executing command '${interaction.commandName}':`, err.stack);
+		await interaction.reply({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
+	}
 }
 
 function checkPerms(handler, interaction, bot) {

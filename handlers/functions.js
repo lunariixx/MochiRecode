@@ -25,7 +25,7 @@ module.exports = async (bot, client, reload) => {
                 missingFunctions = true;
             }
         } catch (err) {
-            logger.error(`[Handler] Functions: Failed to load '${file}':`, err);
+            logger.error({ err }, `[Handler] Functions: Failed to load '${file}':`, err.stack);
         }
     });
 

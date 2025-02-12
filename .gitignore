@@ -1,7 +1,10 @@
 /node_modules
 package-lock.json
-config/information.json
+config/information.js
 config/main.js
 config/perms.json
 config/rules.json
-config/urlBlocklist.json
+database.sqlite
+database.sqlite-shm
+database.sqlite-wal
+database.sqlite-journal

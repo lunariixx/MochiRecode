@@ -20,7 +20,7 @@ module.exports = async (bot, client, reload) => {
 				missingEvents = true;
 			}
 		} catch (err) {
-			logger.error(`[Handler] Events: Failed to load '${file}':`, err);
+			logger.error({ err }, `[Handler] Events: Failed to load '${file}':`, err.stack);
 		}
 	});
 
@@ -33,7 +33,7 @@ module.exports = async (bot, client, reload) => {
 		try {
 			event.initEvent(client, bot);
 		} catch (err) {
-			logger.error(err);
+			logger.error({ err }, err);
 		}
 	});
 };

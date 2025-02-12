@@ -18,7 +18,7 @@ module.exports = async (bot, client) => {
 				logger.warn(`[Handler] Buttons: '${file}' is missing customId or execute property.`);
 			}
 		} catch (err) {
-			logger.error(`[Handler] Buttons: Failed to load '${file}':`, err);
+			logger.error({ err }, `[Handler] Buttons: Failed to load '${file}':`, err.stack);
 		}
 	}
 

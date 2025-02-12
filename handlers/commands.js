@@ -25,7 +25,7 @@ module.exports = async (bot, client, reload) => {
 					logger.warn(`[Handler] Commands: '${file}' is missing data or execute property.`);
 				}
 			} catch (err) {
-				logger.error(`[Handler] Commands: Failed to load '${file}':`, err);
+				logger.error({ err }, `[Handler] Commands: Failed to load '${file}':`, err.stack);
 			}
 		}
 	});
@@ -40,7 +40,7 @@ module.exports = async (bot, client, reload) => {
 			logger.info("[Handler] Successfully registered global commands.");
 		});
 	} catch (err) {
-		logger.error("[Handler] Failed to register global commands:", err.response?.data || err);
+		logger.error({ err }, "[Handler] Failed to register global commands:", err.stack.response?.data || err);
 	}
 
 	logger.info("[Handler] Slash Commands: Initialized.");

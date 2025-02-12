@@ -17,7 +17,7 @@ module.exports = {
 			const memberCount = members.filter((member) => !member.user.bot).size;
 			client.user.setActivity(`over ${memberCount} members`, { type: ActivityType.Watching });
 		} catch (err) {
-			logger.error(`[Function] updateStatus: Failed to fetch members:`, err);
+			logger.error({ err }, `[Function] updateStatus: Failed to fetch members:`, err.stack);
 		}
 	},
 };

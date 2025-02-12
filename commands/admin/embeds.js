@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, MessageFlags, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const rules = require('../../config/rules.json');
-const information = require('../../config/information.json');
+const information = require('../../config/information.js');
 const { config } = bot;
 
 function createEmbed(data) {

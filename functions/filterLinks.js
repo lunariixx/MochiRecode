@@ -31,7 +31,7 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.error("[ERROR] URL Blacklister:", error);
+      console.error("[ERROR] URL Blacklister:", err.stackor);
     }
   },
 };
